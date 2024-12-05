@@ -1,0 +1,78 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Moedas</title>
+</head>
+
+<body>
+    <p>Qual Moeda Gostaria de Converter?</p>
+    <p>Dados de conversão coletados em 05/12/2024</p>
+    <label for="">Valor</label>
+    <input type="number" name="valor" id="valor">
+    <label for="">Moeda</label>
+    <select name="moeda" id="moeda">
+        <option value="BRL">BRL</option>
+        <option value="Euro">Euro</option>
+        <option value="Dolar">Dolar</option>
+    </select>
+    <select name="moedaConvertida" id="moedaConvertida">
+        <option value="BRL">BRL</option>
+        <option value="Euro">Euro</option>
+        <option value="Dolar">Dolar</option>
+    </select>
+    <button onclick="converter()">Converter</button>
+
+    <h2 id="resultado"></h2>
+</body>
+
+<script>
+    function converteMoeda(moeda, modificador) {
+        return moeda * modificador;
+    }
+
+    function converter() {
+
+        let valor = document.getElementById("valor").value;
+        let moeda = document.getElementById("moeda").value;
+        let moedaConvertida = document.getElementById("moedaConvertida").value;
+
+        if (valor != "" && moeda != "" && moedaConvertida != "") {
+            if (moeda == moedaConvertida) {
+                document.getElementById("resultado").innerText = "Converrsão Unica: " + converteMoeda(valor, 1);
+            } else {
+                if (moeda == "BRL") {
+                    switch (moedaConvertida) {
+                        case "Dolar":
+                            document.getElementById("resultado").innerText = "Dolar: " + converteMoeda(valor, 0.17);
+                        case "Euro":
+                            document.getElementById("resultado").innerText = "Euro: " + converteMoeda(valor, 0.16);
+                    }
+                } else {
+                    if (moeda == "Euro") {
+                        switch (moedaConvertida) {
+                            case "BRL":
+                                document.getElementById("resultado").innerText = "Real: " + converteMoeda(valor, 6.34);
+                            case "Dolar":
+                                document.getElementById("resultado").innerText = "Dolar: " + converteMoeda(valor, 1.06);
+                        }
+                    } else {
+                        if (moeda == "Dolar") {
+                            switch (moedaConvertida) {
+                                case "BRL":
+                                    document.getElementById("resultado").innerText = "Real: " + converteMoeda(valor, 5.99);
+                                case "Euro":
+                                    document.getElementById("resultado").innerText = "Euro: " + converteMoeda(valor, 0.95);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            document.getElementById("resultado").innerText = "Insira um valor válido!";
+        }
+    }
+</script>
+
+</html>

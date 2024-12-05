@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMC</title>
+</head>
+
+<body>
+    <h1>Calculador automático de IMC</h1>
+    <label for="altura">Altura (m):</label>
+    <input value="0" type="number" name="altura" id="altura" step="0.01">
+
+    <label for="peso">Peso em Kg:</label>
+    <input value="0" type="number" name="peso" id="peso">
+
+    <button onclick="calculaIMCMasculino()">Calcular IMC Masculino</button>
+
+    <h2 id="resultado"></h2>
+
+    <script>
+        function calculaIMCMasculino() {
+            let altura = parseFloat(document.getElementById("altura").value);
+            let peso = parseFloat(document.getElementById("peso").value);
+            if (altura > 0 && peso > 0) {
+                let imc = peso / (altura ** 2);
+                let resultadoText = `Peso: ${peso} kg, Altura: ${altura} m, IMC: ${imc.toFixed(2)} - `;
+
+                if (imc < 18.5) {
+                    resultadoText += "Abaixo do peso.";
+                } else if (imc >= 18.5 && imc < 24.9) {
+                    resultadoText += "Peso normal.";
+                } else if (imc >= 25 && imc < 29.9) {
+                    resultadoText += "Sobrepeso.";
+                } else if (imc >= 30 && imc < 34.9) {
+                    resultadoText += "Obesidade grau I.";
+                } else if (imc >= 35 && imc < 39.9) {
+                    resultadoText += "Obesidade grau II.";
+                } else if (imc >= 40) {
+                    resultadoText += "Obesidade grau III (Obesidade mórbida).";
+                } else {
+                    resultadoText += "Digite valores válidos.";
+                }
+
+                document.getElementById("resultado").innerText = resultadoText;
+            } else {
+                document.getElementById("resultado").innerText = "Digite valores válidos.";
+            }
+        }
+    </script>
+</body>
+
+</html>
+
+
+</html>
