@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .background {
+            background-color: #355691;
+            height: 100vh;
+            padding-top: 1px;
+        }
+        .title {
+            color: white;
+            text-align: center;
+            font-size: 40px;
+            margin-top: 10%;
+        }
+        .display {
+            color: white;
+            font-size: 25px;
+            text-align: center;
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+        .hide {
+            display: none;
+        }
+        .container {
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 33% 33% 33%;
+            grid-template-rows: 33% 33% 33%;
+            max-width: 300px;
+        }
+        .tile {
+            border: 1px solid white;
+            min-width: 100px;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            cursor: pointer;
+        }
+        .playerX {
+            color: #76E5FC;
+        }
+        .playerO {
+            color: #CC2936;
+        }
+        .controls {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1em;
+        }
+        #reset {
+            background-color: #CC2936;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <main class="background">
+        <section class="title">
+            <h1>Jogo da Velha</h1>
+        </section>
+        <br>
+        <section class="container">
+            <div class="tile" data-index="0"></div>
+            <div class="tile" data-index="1"></div>
+            <div class="tile" data-index="2"></div>
+            <div class="tile" data-index="3"></div>
+            <div class="tile" data-index="4"></div>
+            <div class="tile" data-index="5"></div>
+            <div class="tile" data-index="6"></div>
+            <div class="tile" data-index="7"></div>
+            <div class="tile" data-index="8"></div>
+        </section>
+        <section class="display announcer hide"></section>
+        <section class="controls">
+            <button id="reset">Reiniciar</button>
+        </section>
+    </main>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const tiles = Array.from(document.querySelectorAll('.tile'));
+            const resetButton = document.querySelector('#reset');
+            const announcer = document.querySelector('.announcer');
+
+            let board = ['', '', '', '', '', '', '', '', ''];
+            let currentPlayer = 'X';
+            let isGameActive = true;
+
+            const PLAYERX_WON = "PLAYERX_WON";
+            const PLAYERO_WON = "PLAYERO_WON";
+            const TIE = "TIE";
+
+            const winningConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6],
+            ];
+
+            function handleResultValidation() {
+                let roundWon = false;
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                        roundWon = true;
+                        break;
+                    }
+                }
+
+                if (roundWon) {
+                    announce(currentPlayer === 'X' ? PLAYERX_WON : PLAYERO_WON);
+                    isGameActive = false;
+                    return;
+                }
+
+                if (!board.includes('')) {
+                    announce(TIE);
+                }
+            }
+
+            const announce = (type) => {
+                switch (type) {
+                    case PLAYERO_WON:
+                        announcer.innerHTML = 'Jogador <span class="playerO">O</span> Venceu';
+                        break;
+                    case PLAYERX_WON:
+                        announcer.innerHTML = 'Jogador <span class="playerX">X</span> Venceu';
+                        break;
+                    case TIE:
+                        announcer.innerText = "Empate";
+                }
+                announcer.classList.remove('hide');
+            };
+
+            const changePlayer = () => {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            };
+
+            const userAction = (tile, index) => {
+                if (!tile.innerText && isGameActive) {
+                    board[index] = currentPlayer;
+                    tile.innerText = currentPlayer;
+                    handleResultValidation();
+                    if (isGameActive) {
+                        changePlayer();
+                        if (currentPlayer === 'O') IAMove();
+                    }
+                }
+            };
+
+            tiles.forEach((tile, index) => {
+                tile.addEventListener('click', () => userAction(tile, index));
+            });
+
+            resetButton.addEventListener('click', () => {
+                board = ['', '', '', '', '', '', '', '', ''];
+                tiles.forEach(tile => {
+                    tile.innerText = '';
+                });
+                announcer.classList.add('hide');
+                isGameActive = true;
+                currentPlayer = 'X';
+            });
+
+            function IAMove() {
+                let bestScore = -Infinity;
+                let move;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'O';
+                        let score = minimax(board, 0, false);
+                        board[i] = '';
+                        if (score > bestScore) {
+                            bestScore = score;
+                            move = i;
+                        }
+                    }
+                }
+                board[move] = 'O';
+                tiles[move].innerText = 'O';
+                handleResultValidation();
+                if (isGameActive) changePlayer();
+            }
+
+            function minimax(board, depth, isMaximizing) {
+                if (checkWin('O')) return 1;
+                if (checkWin('X')) return -1;
+                if (!board.includes('')) return 0;
+
+                if (isMaximizing) {
+                    let bestScore = -Infinity;
+                    for (let i = 0; i < board.length; i++) {
+                        if (board[i] === '') {
+                            board[i] = 'O';
+                            let score = minimax(board, depth + 1, false);
+                            board[i] = '';
+                            bestScore = Math.max(score, bestScore);
+                        }
+                    }
+                    return bestScore;
+                } else {
+                    let bestScore = Infinity;
+                    for (let i = 0; i < board.length; i++) {
+                        if (board[i] === '') {
+                            board[i] = 'X';
+                            let score = minimax(board, depth + 1, true);
+                            board[i] = '';
+                            bestScore = Math.min(score, bestScore);
+                        }
+                    }
+                    return bestScore;
+                }
+            }
+
+            function checkWin(player) {
+                return winningConditions.some(([a, b, c]) => {
+                    return board[a] === player && board[b] === player && board[c] === player;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
