@@ -5,28 +5,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMC</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        body {
+            background: purple;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: space-evenly;
+            background-color: blueviolet;
+            width: 70%;
+            height: 70vh;
+            border-radius: 10%;
+            padding: 20px;
+        }
+        
+        label {
+            font-size: 25px;
+        }
+        
+        input {
+            text-align: center;
+            width: 20%;
+        }
+        
+        button {
+            display: block;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Calculador automático de IMC</h1>
-    <label for="altura">Altura (m):</label>
-    <input value="0" type="number" name="altura" id="altura" step="0.01">
-
-    <label for="peso">Peso em Kg:</label>
-    <input value="0" type="number" name="peso" id="peso">
-
-    <button onclick="calculaIMCMasculino()">Calcular IMC Masculino</button>
-
-    <h2 id="resultado"></h2>
-
+    <section>
+        <h1>Calculador automático de IMC</h1>
+        <label for="altura">Altura (m):</label>
+        <input value="0" type="number" name="altura" id="altura" step="0.01">
+        <label for="peso">Peso em Kg:</label>
+        <input value="0" type="number" name="peso" id="peso">
+        <button onclick="calculaIMC()">Calcular IMC</button>
+        <h2 id="resultado"></h2>
+    </section>
     <script>
-        function calculaIMCMasculino() {
+        function calculaIMC() {
             let altura = parseFloat(document.getElementById("altura").value);
             let peso = parseFloat(document.getElementById("peso").value);
             if (altura > 0 && peso > 0) {
                 let imc = peso / (altura ** 2);
                 let resultadoText = `Peso: ${peso} kg, Altura: ${altura} m, IMC: ${imc.toFixed(2)} - `;
-
                 if (imc < 18.5) {
                     resultadoText += "Abaixo do peso.";
                 } else if (imc >= 18.5 && imc < 24.9) {
@@ -42,7 +80,6 @@
                 } else {
                     resultadoText += "Digite valores válidos.";
                 }
-
                 document.getElementById("resultado").innerText = resultadoText;
             } else {
                 document.getElementById("resultado").innerText = "Digite valores válidos.";
@@ -50,8 +87,5 @@
         }
     </script>
 </body>
-
-</html>
-
 
 </html>
