@@ -17,6 +17,15 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        h1 {
+            color: white;
+        }
+        
+        h2 {
+            color: white;
         }
         
         section {
@@ -27,12 +36,14 @@
             justify-content: space-evenly;
             background-color: #282F44;
             height: 70vh;
+            width: 50%;
             border-radius: 10px;
             padding: 20px;
         }
         
         label {
             font-size: 25px;
+            color: white;
         }
         
         input {
@@ -63,7 +74,7 @@
             let peso = parseFloat(document.getElementById("peso").value);
             if (altura > 0 && peso > 0) {
                 let imc = peso / (altura ** 2);
-                let resultadoText = `Peso: ${peso} kg, Altura: ${altura} m, IMC: ${imc.toFixed(2)} - `;
+                let resultadoText = `IMC: ${imc.toFixed(2)} - `;
                 if (imc < 18.5) {
                     resultadoText += "Abaixo do peso.";
                 } else if (imc >= 18.5 && imc < 24.9) {
@@ -75,7 +86,7 @@
                 } else if (imc >= 35 && imc < 39.9) {
                     resultadoText += "Obesidade grau II.";
                 } else if (imc >= 40) {
-                    resultadoText += "Obesidade grau III (Obesidade mórbida).";
+                    resultadoText += "Obesidade grau III (mórbida).";
                 } else {
                     resultadoText += "Digite valores válidos.";
                 }
