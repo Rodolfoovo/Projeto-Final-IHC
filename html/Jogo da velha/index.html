@@ -111,6 +111,12 @@
     </main>
     <script>
         window.addEventListener("DOMContentLoaded", () => {
+            //O algoritmo Minimax simula todas as possíveis jogadas futuras e 
+            // escolhe a melhor opção com base em um princípio de maximização e minimização:
+            // o jogador tenta maximizar sua pontuação (vitória) enquanto minimiza a pontuação
+            // do oponente. Ele avalia as posições do tabuleiro com base em uma árvore de decisão,
+            // onde as folhas representam os resultados possíveis e os nós internos refletem
+            //  as escolhas de cada jogador (fiz esse código no 2 ano em python).
             const tiles = Array.from(document.querySelectorAll('.tile'));
             const resetButton = document.querySelector('#reset');
             const announcer = document.querySelector('.announcer');
